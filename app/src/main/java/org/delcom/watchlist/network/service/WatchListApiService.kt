@@ -50,12 +50,12 @@ interface WatchListApiService {
         @Body request: RequestUserAbout
     ): ResponseMessage<String?>
 
-    // ── Movies (Todos) ────────────────────────────────────────────────────────
+    // ── Movies (Watchlists) ───────────────────────────────────────────────────
 
-    @GET("todos/stats")
+    @GET("watchlists/stats")
     suspend fun getMovieStats(@Header("Authorization") authToken: String): ResponseMessage<ResponseStats?>
 
-    @GET("todos")
+    @GET("watchlists")
     suspend fun getMovies(
         @Header("Authorization") authToken: String,
         @Query("search") search: String? = null,
@@ -65,19 +65,19 @@ interface WatchListApiService {
         @Query("urgency") urgency: String? = null
     ): ResponseMessage<ResponseMoviesPaginated?>
 
-    @POST("todos")
+    @POST("watchlists")
     suspend fun postMovie(
         @Header("Authorization") authToken: String,
         @Body request: RequestMovie
     ): ResponseMessage<ResponseMovieAdd?>
 
-    @GET("todos/{movieId}")
+    @GET("watchlists/{movieId}")
     suspend fun getMovieById(
         @Header("Authorization") authToken: String,
         @Path("movieId") movieId: String
     ): ResponseMessage<ResponseMovie?>
 
-    @PUT("todos/{movieId}")
+    @PUT("watchlists/{movieId}")
     suspend fun putMovie(
         @Header("Authorization") authToken: String,
         @Path("movieId") movieId: String,
@@ -85,14 +85,14 @@ interface WatchListApiService {
     ): ResponseMessage<String?>
 
     @Multipart
-    @PUT("todos/{movieId}/cover")
+    @PUT("watchlists/{movieId}/cover")
     suspend fun putMovieCover(
         @Header("Authorization") authToken: String,
         @Path("movieId") movieId: String,
         @Part file: MultipartBody.Part
     ): ResponseMessage<String?>
 
-    @DELETE("todos/{movieId}")
+    @DELETE("watchlists/{movieId}")
     suspend fun deleteMovie(
         @Header("Authorization") authToken: String,
         @Path("movieId") movieId: String

@@ -8,6 +8,8 @@ import org.delcom.watchlist.network.data.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.*
+import java.security.cert.X509Certificate
 
 // ── Repository Interface ──────────────────────────────────────────────────────
 
@@ -99,6 +101,17 @@ class WatchListAppContainer : IWatchListAppContainer {
         connectTimeout(2, TimeUnit.MINUTES)
         readTimeout(2, TimeUnit.MINUTES)
         writeTimeout(2, TimeUnit.MINUTES)
+
+        // SSL bypass untuk development (self-signed cert)
+        val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+            override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
+            override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
+            override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+        })
+        val sslContext = SSLContext.getInstance("SSL")
+        sslContext.init(null, trustAllCerts, java.security.SecureRandom())
+        sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+        hostnameVerifier { _, _ -> true }
     }.build()
 
     private val retrofit = Retrofit.Builder()

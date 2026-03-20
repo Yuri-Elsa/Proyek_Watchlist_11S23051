@@ -15,7 +15,7 @@ import java.io.InputStream
 
 object ToolsHelper {
     fun getMovieImage(movieId: String, t: String = "0"): String =
-        "${BuildConfig.BASE_URL}images/todos/$movieId?t=$t"
+        "${BuildConfig.BASE_URL}images/watchlists/$movieId?t=$t"
 
     fun getUserImage(userId: String, t: String = "0"): String =
         "${BuildConfig.BASE_URL}images/users/$userId?t=$t"

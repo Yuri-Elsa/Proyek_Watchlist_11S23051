@@ -91,15 +91,15 @@ class MovieViewModel @Inject constructor(
     fun resetProfileAboutState() { _uiState.update { it.copy(profileAbout = MovieActionUIState.Idle) } }
     fun resetProfilePhotoState() { _uiState.update { it.copy(profilePhoto = MovieActionUIState.Idle) } }
 
-    // ── Home movies (isolated state) ──────────────────────────────────────────
+    // ── Home movies ───────────────────────────────────────────────────────────
 
     fun getHomeMovies(authToken: String, page: Int = 1, perPage: Int = 10) {
         viewModelScope.launch {
             _homeMoviesState.value = HomeMoviesUIState.Loading
             val result = repository.getMovies(authToken, null, page, perPage, null, null)
             _homeMoviesState.value = if (result.status == "success" && result.data != null) {
-                val pagination = result.data.pagination ?: ResponsePagination(page, perPage, result.data.todos.size.toLong(), 1, false, false)
-                HomeMoviesUIState.Success(result.data.todos, pagination)
+                val pagination = result.data.pagination ?: ResponsePagination(page, perPage, result.data.watchlists.size.toLong(), 1, false, false)
+                HomeMoviesUIState.Success(result.data.watchlists, pagination)
             } else {
                 HomeMoviesUIState.Error(result.message)
             }
@@ -139,8 +139,8 @@ class MovieViewModel @Inject constructor(
             _uiState.update { it.copy(movies = MoviesUIState.Loading) }
             val result = repository.getMovies(authToken, search, page, perPage, isDone, urgency)
             val state = if (result.status == "success" && result.data != null) {
-                val pagination = result.data.pagination ?: ResponsePagination(page, perPage, result.data.todos.size.toLong(), 1, false, false)
-                MoviesUIState.Success(result.data.todos, pagination)
+                val pagination = result.data.pagination ?: ResponsePagination(page, perPage, result.data.watchlists.size.toLong(), 1, false, false)
+                MoviesUIState.Success(result.data.watchlists, pagination)
             } else {
                 MoviesUIState.Error(result.message)
             }
@@ -163,7 +163,7 @@ class MovieViewModel @Inject constructor(
             _uiState.update { it.copy(movie = MovieUIState.Loading) }
             val result = repository.getMovieById(authToken, movieId)
             val state = if (result.status == "success" && result.data != null)
-                MovieUIState.Success(result.data.todo)
+                MovieUIState.Success(result.data.watchlist)
             else MovieUIState.Error(result.message)
             _uiState.update { it.copy(movie = state) }
         }
